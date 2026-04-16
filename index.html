@@ -130,15 +130,6 @@
     .pdf-btn:hover{background:rgba(255,107,0,0.14);box-shadow:var(--glow)}
     .pdf-btn.primary{background:linear-gradient(135deg,var(--orange),var(--orange-light));color:#fff;border-color:transparent}
     .pdf-btn.primary:hover{box-shadow:0 4px 20px rgba(255,107,0,0.4)}
-    .pdf-upload-area{padding:60px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:440px;text-align:center;border:2px dashed rgba(255,107,0,0.25);margin:20px;border-radius:8px;background:rgba(255,248,242,0.7);transition:border-color 0.3s,background 0.3s;cursor:pointer}
-    .pdf-upload-area.dragover{border-color:var(--orange);background:rgba(255,107,0,0.05)}
-    .pdf-upload-icon{font-size:4rem;margin-bottom:20px;opacity:0.45}
-    .pdf-upload-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:10px}
-    .pdf-upload-sub{font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:1.5px;color:var(--dim);margin-bottom:28px;line-height:1.7}
-    .pdf-upload-btn{font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 32px;cursor:pointer;background:linear-gradient(135deg,var(--orange),var(--orange-light));color:#fff;border:none;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:box-shadow 0.2s,transform 0.2s;box-shadow:0 4px 20px rgba(255,107,0,0.3)}
-    .pdf-upload-btn:hover{box-shadow:0 6px 28px rgba(255,107,0,0.5);transform:translateY(-2px)}
-    #pdf-file-input{display:none}
-    .pdf-viewer-frame{display:none}
     .pdf-viewer-frame.active{display:block}
     .pdf-viewer-frame iframe{width:100%;height:700px;border:none;display:block}
     #experience{background:rgba(255,255,255,0.5)}
@@ -339,21 +330,18 @@
       <div class="pdf-toolbar">
         <div class="pdf-toolbar-left">
           <div class="pdf-toolbar-icon">📄</div>
-          <div><div class="pdf-toolbar-label" id="pdf-filename">No document loaded</div><div class="pdf-toolbar-sub" id="pdf-status">Upload your portfolio or resume PDF to preview it here</div></div>
+          <div>
+            <div class="pdf-toolbar-label">shourya-Portfolio.pdf</div>
+            <div class="pdf-toolbar-sub">Shourya's Design Portfolio · Hosted Document</div>
+          </div>
         </div>
         <div class="pdf-toolbar-right">
-          <button class="pdf-btn" id="btn-change" onclick="document.getElementById('pdf-file-input').click()" style="display:none">Change PDF</button>
-          <a class="pdf-btn primary" id="btn-download" href="#" download style="display:none">⬇ Download</a>
+          <a class="pdf-btn primary" href="shourya-Portfolio.pdf" download>⬇ Download</a>
         </div>
       </div>
-      <div class="pdf-upload-area" id="upload-area" onclick="document.getElementById('pdf-file-input').click()">
-        <div class="pdf-upload-icon">📂</div>
-        <div class="pdf-upload-title">Drop your PDF here</div>
-        <div class="pdf-upload-sub">Drag &amp; drop your portfolio PDF<br>or click below to browse files</div>
-        <button class="pdf-upload-btn" onclick="event.stopPropagation();document.getElementById('pdf-file-input').click()">Select PDF File</button>
-        <input type="file" id="pdf-file-input" accept=".pdf" onchange="loadPDF(event)"/>
+      <div class="pdf-viewer-frame active">
+        <iframe src="shourya-Portfolio.pdf#toolbar=1&navpanes=0" title="Portfolio PDF Viewer"></iframe>
       </div>
-      <div class="pdf-viewer-frame" id="pdf-viewer"><iframe id="pdf-iframe" src="" title="Portfolio PDF Viewer"></iframe></div>
     </div>
   </div>
 </section>
@@ -458,13 +446,6 @@
 
   const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),e.target.dataset.delay||0);}),{threshold:0.1});
   document.querySelectorAll('.reveal').forEach((el,i)=>{el.dataset.delay=(i%4)*80;obs.observe(el);});
-
-  const uploadArea=document.getElementById('upload-area');
-  uploadArea.addEventListener('dragover',e=>{e.preventDefault();uploadArea.classList.add('dragover');});
-  uploadArea.addEventListener('dragleave',()=>uploadArea.classList.remove('dragover'));
-  uploadArea.addEventListener('drop',e=>{e.preventDefault();uploadArea.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f&&f.type==='application/pdf')renderPDF(f);else alert('Please drop a valid PDF file.');});
-  function loadPDF(ev){const f=ev.target.files[0];if(f)renderPDF(f);}
-  function renderPDF(file){const url=URL.createObjectURL(file);document.getElementById('pdf-iframe').src=url+'#toolbar=1&navpanes=0';document.getElementById('pdf-viewer').classList.add('active');document.getElementById('upload-area').style.display='none';document.getElementById('pdf-filename').textContent=file.name;document.getElementById('pdf-status').textContent='Size: '+(file.size/1024).toFixed(1)+' KB  ·  Loaded successfully';document.getElementById('btn-change').style.display='inline-block';document.getElementById('btn-download').style.display='inline-block';document.getElementById('btn-download').href=url;document.getElementById('btn-download').download=file.name;}
 
   let currentTarget=null;
 
